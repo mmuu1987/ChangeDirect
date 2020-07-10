@@ -9,7 +9,7 @@ using UnityEngine;
 /// <summary>
 /// 设置管理，包含一些保存到本地的文件夹名字
 /// </summary>
-public class SettingManager 
+public class SettingManager
 {
 
     public Setting Setting;
@@ -19,7 +19,7 @@ public class SettingManager
     /// </summary>
     public string Path;
 
-    public  void Init()
+    public void Init()
     {
         string path = Application.dataPath;//
 
@@ -27,11 +27,11 @@ public class SettingManager
 
         DirectoryInfo temp = dif.Parent.Parent;//得到了母程序StreamingAssets文件夹所在的路径
 
+       // Path = @"F:\WZS_FILE\gitHub\MyInteractionWall\unity-photo-particle-system-master\Assets\StreamingAssets";
+        Debug.LogError(temp);
         Path = temp.FullName;
-        Debug.Log(temp);
-
-       Setting = new Setting();
-       LoadDirectInfo();
+        Setting = new Setting();
+        LoadDirectInfo();
 
     }
 
@@ -41,17 +41,20 @@ public class SettingManager
     /// </summary>
     public string GetExePath(Direct type)
     {
-
+        DirectoryInfo dif = null;
         switch (type)
         {
             case Direct.None:
                 break;
             case Direct.FirstDir:
-                return Setting.FirstDir;
+                dif = new DirectoryInfo(Setting.FirstDir);
+                return dif.Name;
             case Direct.SecondDir:
-                return Setting.SecondDir;
+                dif = new DirectoryInfo(Setting.SecondDir);
+                return dif.Name;
             case Direct.ThirdDir:
-                return Setting.ThirdDir;
+                dif = new DirectoryInfo(Setting.ThirdDir);
+                return dif.Name;
             default:
                 throw new ArgumentOutOfRangeException("type", type, null);
         }
@@ -77,7 +80,7 @@ public class SettingManager
     /// </summary>
     public void LoadDirectInfo()
     {
-        if (string.IsNullOrEmpty(Path)) return;   
+        if (string.IsNullOrEmpty(Path)) return;
         string path = Path + "/Setting.data";
 
         if (!File.Exists(path))//不包含则创建，那就是游戏安装的时候第一次运行
@@ -100,7 +103,7 @@ public class SettingManager
 
     public void SaveDirectInfo()
     {
-        if (string.IsNullOrEmpty(Path)) return;   
+        if (string.IsNullOrEmpty(Path)) return;
 
         string path = Path + "/Setting.data";
 
@@ -117,27 +120,36 @@ public class SettingManager
     public void ChangeDirectName(Direct type, string directName)
     {
         string path = null;
+        DirectoryInfo dif;
+        string newPath;
         switch (type)
         {
             case Direct.None:
                 break;
             case Direct.FirstDir:
-                path = Path + "/大事记/" + Setting.FirstDir;
-                Setting.FirstDir = directName;
+                dif = new DirectoryInfo(Setting.FirstDir);
+                newPath = dif.Parent + "/" + directName;
+                Directory.Move(dif.FullName, newPath);
+                Setting.FirstDir = newPath;
+
                 break;
             case Direct.SecondDir:
-                path = Path + "/大事记/" + Setting.SecondDir;
-                Setting.SecondDir = directName;
+                dif = new DirectoryInfo(Setting.SecondDir);
+                newPath = dif.Parent + "/" + directName;
+                Directory.Move(dif.FullName, newPath);
+                Setting.SecondDir = newPath;
                 break;
             case Direct.ThirdDir:
-                path = Path + "/大事记/" + Setting.ThirdDir;
-                Setting.ThirdDir = directName;
+                dif = new DirectoryInfo(Setting.ThirdDir);
+                newPath = dif.Parent + "/" + directName;
+                Directory.Move(dif.FullName, newPath);
+                Setting.ThirdDir = newPath;
                 break;
             default:
                 throw new ArgumentOutOfRangeException("type", type, null);
         }
 
-        ChangeDirectName(path, directName);
+
 
 
         SaveDirectInfo();
@@ -151,6 +163,7 @@ public class SettingManager
 
         Directory.Move(dif.FullName, newPath);
 
+
         Debug.Log("改名成功");
     }
 
@@ -159,15 +172,15 @@ public class SettingManager
 public class Setting
 {
     /// <summary>
-    /// 大事件的第一层文件夹名字
+    /// 大事件的第一层文件夹名字路径
     /// </summary>
     public string FirstDir;
     /// <summary>
-    /// 大事件的第一层文件夹名字
+    /// 大事件的第一层文件夹名字路径
     /// </summary>
     public string SecondDir;
     /// <summary>
-    /// 大事件的第一层文件夹名字
+    /// 大事件的第一层文件夹路径
     /// </summary>
     public string ThirdDir;
 
