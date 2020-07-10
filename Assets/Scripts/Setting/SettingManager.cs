@@ -27,9 +27,9 @@ public class SettingManager
 
         DirectoryInfo temp = dif.Parent.Parent;//得到了母程序StreamingAssets文件夹所在的路径
 
-       // Path = @"F:\WZS_FILE\gitHub\MyInteractionWall\unity-photo-particle-system-master\Assets\StreamingAssets";
+        Path = @"F:\WZS_FILE\gitHub\MyInteractionWall\unity-photo-particle-system-master\Assets\StreamingAssets";
         Debug.LogError(temp);
-        Path = temp.FullName;
+       // Path = temp.FullName;
         Setting = new Setting();
         LoadDirectInfo();
 
