@@ -8,58 +8,35 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
 
-    private SettingManager _settingManager;
+    public SettingManager SettingManager;
 
-   
-    public Button FirstDir;
 
-    public Button SecondDir;
+    public static UIManager Instance;
 
-    public Button ThirdDir;
+    public GameObject PrefaGameObject;
 
+    public Transform Grid;
 
     private string _path;
+
+    public List<Direct> types = new List<Direct>();
+
+    public GameObject TipGameObject;
+
+    public Button SureButton;
+    private void Awake()
+    {
+        Instance = this;
+    }
 	void Start ()
 	{
-	   _settingManager = new SettingManager();
-       _settingManager.Init();
-       
-        FirstDir.onClick.AddListener((() =>
+	   SettingManager = new SettingManager();
+       SettingManager.Init();
+	   Init();
+        SureButton.onClick.AddListener((() =>
         {
-            string dirName = FirstDir.transform.parent.Find("Text").GetComponent<Text>().text;
-
-            if (!string.IsNullOrEmpty(dirName))
-            {
-                _settingManager.ChangeDirectName(Direct.FirstDir, dirName);
-            }
-            FirstDir.transform.parent.Find("tip").GetComponent<Text>().text = "当前大事件第一层文件夹的名字为：   " + _settingManager.GetExePath(Direct.FirstDir);
+            TipGameObject.SetActive(false);
         }));
-	    FirstDir.transform.parent.Find("tip").GetComponent<Text>().text = "当前大事件第一层文件夹的名字为：   " + _settingManager.GetExePath(Direct.FirstDir);
-
-        SecondDir.onClick.AddListener((() =>
-        {
-            string dirName = SecondDir.transform.parent.Find("Text").GetComponent<Text>().text;
-
-            if (!string.IsNullOrEmpty(dirName))
-            {
-                _settingManager.ChangeDirectName(Direct.SecondDir, dirName);
-            }
-            SecondDir.transform.parent.Find("tip").GetComponent<Text>().text = "当前大事件第二层文件夹的名字为：   " + _settingManager.GetExePath(Direct.SecondDir);
-        }));
-        SecondDir.transform.parent.Find("tip").GetComponent<Text>().text = "当前大事件第二层文件夹的名字为：   " + _settingManager.GetExePath(Direct.SecondDir);
-
-
-        ThirdDir.onClick.AddListener((() =>
-        {
-            string dirName = ThirdDir.transform.parent.Find("Text").GetComponent<Text>().text;
-
-            if (!string.IsNullOrEmpty(dirName))
-            {
-                _settingManager.ChangeDirectName(Direct.ThirdDir, dirName);
-            }
-            ThirdDir.transform.parent.Find("tip").GetComponent<Text>().text = "当前大事件第三层文件夹的名字为：   " + _settingManager.GetExePath(Direct.ThirdDir);
-        }));
-        ThirdDir.transform.parent.Find("tip").GetComponent<Text>().text = "当前大事件第三层文件夹的名字为：   " + _settingManager.GetExePath(Direct.ThirdDir);
 	}
 	
 	// Update is called once per frame
@@ -69,9 +46,36 @@ public class UIManager : MonoBehaviour
 
 
 
+    private void Init()
+    {
 
+        foreach (Direct direct in types)
+        {
+            GameObject go = Instantiate(PrefaGameObject);
 
+            go.transform.parent = Grid;
 
+            ChangeItem item = go.GetComponent<ChangeItem>();
+
+            item.SetType(direct);
+        }
+
+      
+    }
+
+    public void ShowTip(bool isChange)
+    {
+
+        TipGameObject.gameObject.SetActive(true);
+        if (isChange)
+        {
+            TipGameObject.transform.Find("Text").GetComponent<Text>().text = "改名成功";
+        }
+        else
+        {
+            TipGameObject.transform.Find("Text").GetComponent<Text>().text = "改名失败";
+        }
+    }
     /// <summary>
     /// 打开项目
     /// </summary>

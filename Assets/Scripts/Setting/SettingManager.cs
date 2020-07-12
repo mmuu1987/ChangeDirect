@@ -27,10 +27,10 @@ public class SettingManager
 
         DirectoryInfo temp = dif.Parent.Parent;//得到了母程序StreamingAssets文件夹所在的路径
 
-        Path = @"F:\WZS_FILE\gitHub\MyInteractionWall\unity-photo-particle-system-master\Assets\StreamingAssets";
-        Debug.LogError(temp);
-       // Path = temp.FullName;
-        Setting = new Setting();
+       // Path = @"E:\WB\MyInteracionWall\MyInteractionWall\unity-photo-particle-system-master\Assets\StreamingAssets";
+      //  Debug.LogError(temp);
+        Path = temp.FullName;
+    
         LoadDirectInfo();
 
     }
@@ -39,7 +39,7 @@ public class SettingManager
     /// <summary>
     /// 获取可执行程序路径
     /// </summary>
-    public string GetExePath(Direct type)
+    public string GetPath(Direct type,bool isParent=false)
     {
         DirectoryInfo dif = null;
         switch (type)
@@ -48,33 +48,60 @@ public class SettingManager
                 break;
             case Direct.FirstDir:
                 dif = new DirectoryInfo(Setting.FirstDir);
-                return dif.Name;
+                break;
             case Direct.SecondDir:
                 dif = new DirectoryInfo(Setting.SecondDir);
-                return dif.Name;
+                break;
             case Direct.ThirdDir:
                 dif = new DirectoryInfo(Setting.ThirdDir);
-                return dif.Name;
+                
+                break;
+            case Direct.IcOne:
+                dif = new DirectoryInfo(Setting.IcOne);
+                break;
+            case Direct.IcTwo:
+                dif = new DirectoryInfo(Setting.IcTwo);
+                break;
+            case Direct.IcThree:
+                dif = new DirectoryInfo(Setting.IcThree);
+                break;
+            case Direct.IcFour:
+                dif = new DirectoryInfo(Setting.IcFour);
+                break;
+            case Direct.IcFive:
+                dif = new DirectoryInfo(Setting.IcFive);
+                break;
+            case Direct.IcSix:
+                dif = new DirectoryInfo(Setting.IcSix);
+                break;
+            case Direct.PhOne:
+                dif = new DirectoryInfo(Setting.PhOne);
+                break;
+            case Direct.PhTwo:
+                dif = new DirectoryInfo(Setting.PhTwo);
+                break;
+            case Direct.PhThree:
+                dif = new DirectoryInfo(Setting.PhThree);
+                break;
+            case Direct.OsOne:
+                dif = new DirectoryInfo(Setting.OsOne);
+                break;
+            case Direct.OsTwo:
+                dif = new DirectoryInfo(Setting.OsTwo);
+                break;
+            case Direct.OsThree:
+                dif = new DirectoryInfo(Setting.OsThree);
+                break;
             default:
                 throw new ArgumentOutOfRangeException("type", type, null);
         }
-        return Setting.ExePath;
-    }
-    /// <summary>
-    /// 设置可执行程序的路径
-    /// </summary>
-    public void SetExePath(string path)
-    {
-        if (!string.IsNullOrEmpty(path))
+        if (dif != null)
         {
-            Setting.ExePath = path;
-
+            return dif.Parent.Name + "目录下的：" + dif.Name;
         }
-        else
-        {
-            Debug.LogError("路径为Null");
-        }
+        return null;
     }
+   
     /// <summary>
     /// 加载文件夹信息
     /// </summary>
@@ -85,6 +112,8 @@ public class SettingManager
 
         if (!File.Exists(path))//不包含则创建，那就是游戏安装的时候第一次运行
         {
+            Setting = new Setting();
+
             string data = JsonUtility.ToJson(Setting);
 
             byte[] bytes = Encoding.UTF8.GetBytes(data);
@@ -101,9 +130,9 @@ public class SettingManager
         }
     }
 
-    public void SaveDirectInfo()
+    public bool SaveDirectInfo()
     {
-        if (string.IsNullOrEmpty(Path)) return;
+        if (string.IsNullOrEmpty(Path)) return false;
 
         string path = Path + "/Setting.data";
 
@@ -112,59 +141,87 @@ public class SettingManager
         byte[] bytes = Encoding.UTF8.GetBytes(data);
 
         File.WriteAllBytes(path, bytes);
+
+        return true;
     }
 
     /// <summary>
-    /// 改变文件夹名字
+    ///  改变文件夹名字
     /// </summary>
-    public void ChangeDirectName(Direct type, string directName)
+    /// <param name="type">需要改变的类型</param>
+    /// <param name="directName">改成后的文件夹名字</param>
+    public bool ChangeDirectName(Direct type, string directName)
     {
-        string path = null;
-        DirectoryInfo dif;
-        string newPath;
+        bool isChange = false;
         switch (type)
         {
             case Direct.None:
                 break;
             case Direct.FirstDir:
-                dif = new DirectoryInfo(Setting.FirstDir);
-                newPath = dif.Parent + "/" + directName;
-                Directory.Move(dif.FullName, newPath);
-                Setting.FirstDir = newPath;
 
+                Setting.FirstDir = ChangeDirectName(directName, Setting.FirstDir);
                 break;
             case Direct.SecondDir:
-                dif = new DirectoryInfo(Setting.SecondDir);
-                newPath = dif.Parent + "/" + directName;
-                Directory.Move(dif.FullName, newPath);
-                Setting.SecondDir = newPath;
+                Setting.SecondDir = ChangeDirectName(directName, Setting.SecondDir); 
                 break;
             case Direct.ThirdDir:
-                dif = new DirectoryInfo(Setting.ThirdDir);
-                newPath = dif.Parent + "/" + directName;
-                Directory.Move(dif.FullName, newPath);
-                Setting.ThirdDir = newPath;
+                Setting.ThirdDir = ChangeDirectName(directName, Setting.ThirdDir); 
+                break;
+            case Direct.IcOne:
+                Setting.IcOne = ChangeDirectName(directName, Setting.IcOne); 
+                break;
+            case Direct.IcTwo:
+                Setting.IcTwo = ChangeDirectName(directName, Setting.IcTwo); 
+                break;
+            case Direct.IcThree:
+                Setting.IcThree = ChangeDirectName(directName, Setting.IcThree); 
+                break;
+            case Direct.IcFour:
+                Setting.IcFour = ChangeDirectName(directName, Setting.IcFour); 
+                break;
+            case Direct.IcFive:
+                Setting.IcFive = ChangeDirectName(directName, Setting.IcFive); 
+                break;
+            case Direct.IcSix:
+                Setting.IcSix = ChangeDirectName(directName, Setting.IcSix); 
+                break;
+            case Direct.PhOne:
+                Setting.PhOne = ChangeDirectName(directName, Setting.PhOne); 
+                break;
+            case Direct.PhTwo:
+                Setting.PhTwo = ChangeDirectName(directName, Setting.PhTwo); 
+                break;
+            case Direct.PhThree:
+                Setting.PhThree = ChangeDirectName(directName, Setting.PhThree); 
+                break;
+            case Direct.OsOne:
+                Setting.OsOne = ChangeDirectName(directName, Setting.OsOne); 
+                break;
+            case Direct.OsTwo:
+                Setting.OsTwo = ChangeDirectName(directName, Setting.OsTwo); 
+                break;
+            case Direct.OsThree:
+                Setting.OsThree = ChangeDirectName(directName, Setting.OsThree); 
                 break;
             default:
                 throw new ArgumentOutOfRangeException("type", type, null);
         }
 
 
+       isChange = SaveDirectInfo();
 
-
-        SaveDirectInfo();
+        return isChange;
     }
 
-    private void ChangeDirectName(string path, string directName)
+    private string  ChangeDirectName(string directName,string path)
     {
-        DirectoryInfo dif = new DirectoryInfo(path);
+        var dif = new DirectoryInfo(path);
+        string oldName = dif.Name;
 
-        string newPath = dif.Parent + "/" + directName;
-
+        if (directName == oldName) return dif.FullName;
+        string  newPath = dif.Parent + "/" + directName;
         Directory.Move(dif.FullName, newPath);
-
-
-        Debug.Log("改名成功");
+        return newPath;
     }
 
 }
@@ -172,28 +229,90 @@ public class SettingManager
 public class Setting
 {
     /// <summary>
-    /// 大事件的第一层文件夹名字路径
+    /// 大事件的第一层文件夹路径
     /// </summary>
     public string FirstDir;
     /// <summary>
-    /// 大事件的第一层文件夹名字路径
+    /// 大事件的第一层文件夹路径
     /// </summary>
     public string SecondDir;
     /// <summary>
     /// 大事件的第一层文件夹路径
     /// </summary>
     public string ThirdDir;
+    /// <summary>
+    /// 公司介绍里面的的第1栏
+    /// </summary>
+    public string IcOne;
+    /// <summary>
+    /// 公司介绍里面的的第2栏
+    /// </summary>
+    public string IcTwo;
+    /// <summary>
+    /// 公司介绍里面的的第3栏
+    /// </summary>
+    public string IcThree;
+    /// <summary>
+    /// 公司介绍里面的的第4栏
+    /// </summary>
+    public string IcFour;
+    /// <summary>
+    /// 公司介绍里面的的第5栏
+    /// </summary>
+    public string IcFive;
+    /// <summary>
+    /// 公司介绍里面的的第6栏
+    /// </summary>
+    public string IcSix;
 
     /// <summary>
-    /// 执行文件的路径
+    /// 私享穿甲第1栏
     /// </summary>
-    public string ExePath;
+    public string PhOne;
+
+    /// <summary>
+    /// 私享穿甲第2栏
+    /// </summary>
+    public string PhTwo;
+    /// <summary>
+    /// 私享穿甲第3栏
+    /// </summary>
+    public string PhThree;
+
+    /// <summary>
+    /// 卓越风采第1栏
+    /// </summary>
+    public string OsOne;
+    /// <summary>
+    /// 卓越风采第2栏
+    /// </summary>
+    public string OsTwo;
+    /// <summary>
+    /// 卓越风采第3栏
+    /// </summary>
+    public string OsThree;
+
 
     public Setting()
     {
-        FirstDir = "2001-2009";
-        SecondDir = "2010-2019";
-        ThirdDir = "2020";
+        FirstDir = Application.streamingAssetsPath + "/大事记/2001-2009";
+        SecondDir = Application.streamingAssetsPath + "/大事记/2010-2019";
+        ThirdDir = Application.streamingAssetsPath + "/大事记/2020";
+
+        IcOne = Application.streamingAssetsPath + "/公司介绍/集团介绍";
+        IcTwo = Application.streamingAssetsPath + "/公司介绍/基本信息";
+        IcThree = Application.streamingAssetsPath + "/公司介绍/股东概况";
+        IcFour = Application.streamingAssetsPath + "/公司介绍/荣誉奖项";
+        IcFive = Application.streamingAssetsPath + "/公司介绍/产品体系";
+        IcSix = Application.streamingAssetsPath + "/公司介绍/服务体系";
+
+        PhOne = Application.streamingAssetsPath + "/私享传家/品牌介绍";
+        PhTwo = Application.streamingAssetsPath + "/私享传家/尊享服务";
+        PhThree = Application.streamingAssetsPath + "/私享传家/大湾区高净值中心";
+
+        OsOne = Application.streamingAssetsPath + "/卓越风采/MDRT荣誉榜";
+        OsTwo = Application.streamingAssetsPath + "/卓越风采/2020年MDRT达标榜";
+        OsThree = Application.streamingAssetsPath + "/卓越风采/双百万储备力量";
     }
 
 
@@ -204,5 +323,18 @@ public enum Direct
     None,
     FirstDir,
     SecondDir,
-    ThirdDir
+    ThirdDir,
+    IcOne,
+    IcTwo,
+    IcThree,
+    IcFour,
+    IcFive,
+    IcSix,
+    PhOne,
+    PhTwo,
+    PhThree,
+    OsOne,
+    OsTwo,
+    OsThree
+
 }
