@@ -226,7 +226,7 @@ public class SettingManager
         if (directName == oldName) return dif.FullName;
         string  newPath = dif.Parent + "/" + directName;
         Directory.Move(dif.FullName, newPath);
-        return dif.Parent.Name+"/"+directName;
+        return "/"+dif.Parent.Name+"/"+directName;
     }
 
 }
